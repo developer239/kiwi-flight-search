@@ -1,0 +1,26 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+    "@strv/javascript/coding-styles/recommended",
+    "@strv/javascript/environments/react/v16",
+    "@strv/javascript/environments/react/optional"
+  ],
+  "rules": {
+    "import/no-unresolved": 0, // TODO: Fix this for nextjs
+    "import/no-extraneous-dependencies": 0, // TODO: Fix this for nextjs
+    "consistent-return": 0,
+    "id-length": 0,
+    "no-mixed-operators": 0,
+    "max-params": 0,
+    "valid-jsdoc": 0,
+    "no-inline-comments": 0,
+    "import/namespace": 0,
+    "arrow-parens": "error",
+    "react/sort-prop-types": 0,
+    "function-paren-newline": 0
+  },
+  "globals": {
+    "process": true,
+    "global": true
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "schema": {
+    "request": {
+      "url" : "https://graphql.kiwi.com/",
+      "method" : "POST",
+      "postIntrospectionQuery" : true
+    }
+  },
+  "endpoints" : [
+    {
+      "name": "Default",
+      "url": "https://graphql.kiwi.com/"
+    }
+  ]
+}
