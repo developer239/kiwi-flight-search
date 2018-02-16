@@ -29,45 +29,42 @@ const Autocomplete = ({
   searchQuery, // eslint-disable-line
   setSearchQuery, // eslint-disable-line
   ...rest
-}) => {
-
-  return (
-    <Fragment>
-      {data.error && (
-        <ErrorContainer>
-          No locations please reload the page <ErrorSmallText>(I did not catch this bug earlier. Autocomplete stops working after first data.eror. This is just a hotfix.)</ErrorSmallText>
-        </ErrorContainer>
+}) => (
+  <Fragment>
+    {data.error && (
+      <ErrorContainer>
+        No locations please reload the page <ErrorSmallText>(I did not catch this bug earlier. Autocomplete stops working after first data.eror. This is just a hotfix.)</ErrorSmallText>
+      </ErrorContainer>
+    )}
+    <Downshift
+      onChange={onSelect}
+      defaultInputValue={defaultInputValue}
+      onInputValueChange={(value => throttle(handleInputValueChange(value), 500))}
+      render={({
+        getInputProps,
+        getItemProps,
+        isOpen,
+        selectedItem,
+        highlightedIndex,
+      }) => (
+        <div>
+          <TextInput disabled={data.error} {...getInputProps(rest)} />
+          {isOpen && data.loading && !data.error &&
+          <ItemsContainer><Item>Loading...</Item></ItemsContainer>}
+          {
+            isOpen && !data.loading && !data.error && data.allLocations && (data.allLocations.edges.length
+              ? (
+                <ItemsContainer>
+                  {data.allLocations.edges.map(renderItems(getItemProps, selectedItem, highlightedIndex))}
+                </ItemsContainer>
+              )
+              : <ItemsContainer><Item>No items found</Item></ItemsContainer>)
+          }
+        </div>
       )}
-      <Downshift
-        onChange={onSelect}
-        defaultInputValue={defaultInputValue}
-        onInputValueChange={(value => throttle(handleInputValueChange(value), 500))}
-        render={({
-          getInputProps,
-          getItemProps,
-          isOpen,
-          selectedItem,
-          highlightedIndex,
-        }) => (
-          <div>
-            <TextInput disabled={data.error} {...getInputProps(rest)} />
-            {isOpen && data.loading && !data.error &&
-            <ItemsContainer><Item>Loading...</Item></ItemsContainer>}
-            {
-              isOpen && !data.loading && !data.error && data.allLocations && (data.allLocations.edges.length
-                ? (
-                  <ItemsContainer>
-                    {data.allLocations.edges.map(renderItems(getItemProps, selectedItem, highlightedIndex))}
-                  </ItemsContainer>
-                )
-                : <ItemsContainer><Item>No items found</Item></ItemsContainer>)
-            }
-          </div>
-        )}
-      />
-    </Fragment>
-  )
-}
+    />
+  </Fragment>
+)
 
 Autocomplete.defaultProps = {
   type: 'text',
