@@ -1,7 +1,6 @@
 import React from 'react'
 import { compose, withState, withHandlers } from 'recompose'
 import { graphql } from 'react-apollo'
-import { withApollo } from 'common/hocs'
 import { throttle } from 'common/helpers'
 import PropTypes from 'prop-types'
 import Downshift from 'downshift'
@@ -77,7 +76,6 @@ Autocomplete.propTypes = {
 
 const enhance = compose(
   withState('searchQuery', 'setSearchQuery', ''),
-  withApollo,
   graphql(searchLocations, {
     skip: ({ searchQuery }) => !searchQuery,
     options: ({ searchQuery }) => ({

@@ -77,7 +77,7 @@ export default ComposedComponent => class WithData extends React.Component {
 
     constructor(props) {
       super(props)
-      this.apollo = initApollo(this.props.serverState && this.props.serverState.apollo.data)
+      this.apollo = initApollo(this.props.serverState.apollo.data)
     }
 
     render() {
