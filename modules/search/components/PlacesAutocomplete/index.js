@@ -1,5 +1,4 @@
-import React, { Fragment } from 'react'
-import styled from 'styled-components'
+import React from 'react'
 import { compose, withState, withHandlers } from 'recompose'
 import { graphql } from 'react-apollo'
 import { withApollo } from 'common/hocs/index'
@@ -11,16 +10,6 @@ import { searchLocations } from 'modules/search/qql'
 import { ItemsContainer, Item, renderItems } from './autocompleteItems'
 
 
-const ErrorContainer = styled.div`
-  background-color: #F44336;
-  color: white;
-  padding: 1rem 0.5rem;
-`
-
-const ErrorSmallText = styled.span`
-  font-size: 11px;
-`
-
 const Autocomplete = ({
   onSelect,
   defaultInputValue,
@@ -30,40 +19,33 @@ const Autocomplete = ({
   setSearchQuery, // eslint-disable-line
   ...rest
 }) => (
-  <Fragment>
-    {data.error && (
-      <ErrorContainer>
-        No locations please reload the page <ErrorSmallText>(I did not catch this bug earlier. Autocomplete stops working after first data.eror. This is just a hotfix.)</ErrorSmallText>
-      </ErrorContainer>
+  <Downshift
+    onChange={onSelect}
+    defaultInputValue={defaultInputValue}
+    onInputValueChange={(value => throttle(handleInputValueChange(value), 500))}
+    render={({
+      getInputProps,
+      getItemProps,
+      isOpen,
+      selectedItem,
+      highlightedIndex,
+    }) => (
+      <div>
+        <TextInput {...getInputProps(rest)} />
+        {isOpen && data.loading &&
+        <ItemsContainer><Item>Loading...</Item></ItemsContainer>}
+        {
+          isOpen && !data.loading && data.allLocations && (data.allLocations.edges.length
+            ? (
+              <ItemsContainer>
+                {data.allLocations.edges.map(renderItems(getItemProps, selectedItem, highlightedIndex))}
+              </ItemsContainer>
+            )
+            : <ItemsContainer><Item>No items found</Item></ItemsContainer>)
+        }
+      </div>
     )}
-    <Downshift
-      onChange={onSelect}
-      defaultInputValue={defaultInputValue}
-      onInputValueChange={(value => throttle(handleInputValueChange(value), 500))}
-      render={({
-        getInputProps,
-        getItemProps,
-        isOpen,
-        selectedItem,
-        highlightedIndex,
-      }) => (
-        <div>
-          <TextInput disabled={data.error} {...getInputProps(rest)} />
-          {isOpen && data.loading && !data.error &&
-          <ItemsContainer><Item>Loading...</Item></ItemsContainer>}
-          {
-            isOpen && !data.loading && !data.error && data.allLocations && (data.allLocations.edges.length
-              ? (
-                <ItemsContainer>
-                  {data.allLocations.edges.map(renderItems(getItemProps, selectedItem, highlightedIndex))}
-                </ItemsContainer>
-              )
-              : <ItemsContainer><Item>No items found</Item></ItemsContainer>)
-          }
-        </div>
-      )}
-    />
-  </Fragment>
+  />
 )
 
 Autocomplete.defaultProps = {
@@ -99,6 +81,7 @@ const enhance = compose(
   graphql(searchLocations, {
     skip: ({ searchQuery }) => !searchQuery,
     options: ({ searchQuery }) => ({
+      errorPolicy: 'all',
       variables: {
         search: searchQuery,
       },

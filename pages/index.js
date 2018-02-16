@@ -51,6 +51,7 @@ const enhance = compose(
     skip: ownProps => !ownProps.search,
     options: ({ search: { date, from, to } }) => ({
       notifyOnNetworkStatusChange: true,
+      errorPolicy: 'all',
       variables: {
         search: createSearchVariable({
           date,
