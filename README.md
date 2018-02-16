@@ -18,12 +18,12 @@ __Uses:__
 #### Installing the project
  
  Run
- ```yarn install```
+ ```yarn install``` (I did not generate lock file for `npm`)
 
  
  #### Development
  
- To start the server simply run: `yarn dev` (I did not generate lock file for `npm`)
+ To start the server simply run: `yarn dev`
  
  #### Production
   
